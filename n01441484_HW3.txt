@@ -1,0 +1,59 @@
+# This program takes a string and reverses it!
+# By: Robert Veinberg-Vikking
+# N-Number: N01441484
+# Date: February 14, 2020
+# For Instructor: Ghosh
+# Assignment Name: HW3
+
+.global _start
+
+.text
+
+_start:
+	
+	la $t2, string				#load address of string
+	
+Loop1: 
+	
+	lb $a0, 0($t2)				#load character at index $t2
+	
+	beqz $a0, Loop2				#check if current character == "0\"
+	
+	addiu $sp, $sp, -4			# push each iteration
+	
+	#li $v0, 11
+	
+	sb $a0, 0($sp)				#store first character
+	
+	#syscall
+	
+	addi $t2, $t2, 1			# increment index $t2
+	addi $s4, $s4, 1			# initialize counter $s4, and increment each iteration
+	
+	j Loop1
+	
+Loop2: # store string on stack
+
+	beq $s4, 0, Exit			# check if string length ($t0) == $t4, if so Exit
+	
+	li $v0, 11
+	lb $a0, 0($sp)
+	syscall						# print character at index $t2
+	
+	addi $t2, $t2, -1			#decrement index
+	addi $s4, $s4, -1			#decrement counter
+	
+	addiu $sp, $sp, 4			# pop each iteration
+	
+	j Loop2
+
+Exit:
+
+	li $v0, 10
+	syscall
+	
+	
+	
+.data
+	
+	string: .asciiz "Computing is Awesome!"
